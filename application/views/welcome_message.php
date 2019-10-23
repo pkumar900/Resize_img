@@ -4,10 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Welcome to CodeIgniter</title>
+	<title>Resize Images</title>
 
 	<style type="text/css">
-
+ 
 	::selection { background-color: #E13300; color: white; }
 	::-moz-selection { background-color: #E13300; color: white; }
 
@@ -63,27 +63,65 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		border: 1px solid #D0D0D0;
 		box-shadow: 0 0 8px #D0D0D0;
 	}
+
+  #imagePreview
+  { 
+     width: 500px;
+     height: 250px;
+     background-position: center center;
+     background-size: cover;
+     -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
+     display: inline-block;
+  }
 	</style>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 </head>
 <body>
 
-<div id="container">
-	<h1>Welcome to CodeIgniter!</h1>
+	<?php 
 
-	<div id="body">
-		<p>The page you are looking at is being generated dynamically by CodeIgniter.</p>
+	 echo '<span style="color:red;">'.$this->session->flashdata("msg").'</span>';
+	 if (isset($image)) { ?>
+		
+		 <a href="<?= base_url('resize_img/'.$image)?>" target='_blank'>Click here to show resized image</a>
+	<?php } ?>
+   <br><br>
+	  <?= form_open_multipart('Welcome/upload_image',array('')); ?>
+  
+        <input type="file" name="image" id="uploadFile" accept=".jpg,jpeg,.png" required=""  class="form-control"/>        
+          <br><br>
 
-		<p>If you would like to edit this page you'll find it located at:</p>
-		<code>application/views/welcome_message.php</code>
-
-		<p>The corresponding controller for this page is found at:</p>
-		<code>application/controllers/Welcome.php</code>
-
-		<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
-	</div>
-
-	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
-</div>
-
+     <div id="imagePreview"></div>     
+      <br>
+       <button type="submit">Upload</button>
+        <br>
+         <br><br><br><label><b>Note:</b></label> <span>Only jpg,jpeg and png filetype allowed</span>
+ 
+   <?= form_close()?>
 </body>
 </html>
+<script type="text/javascript">
+
+	$("#uploadFile").on("change", function ()
+    {
+        var img = $("#uploadFile").val();
+        if (img == '') {
+          $("#imagePreview").removeAttr("style");
+        }
+        var files = !!this.files ? this.files : [];
+        if (!files.length || !window.FileReader)
+            return; // no file selected, or no FileReader support
+
+        if (/^image/.test(files[0].type)) { // only image file
+            var reader = new FileReader(); // instance of the FileReader
+            reader.readAsDataURL(files[0]); // read the local file
+
+            reader.onloadend = function () { // set image data as background of div
+             $("#imagePreview").css("background-image", "url(" + this.result + ")");
+
+            }
+        }
+    });
+</script>
