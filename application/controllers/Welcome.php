@@ -22,7 +22,7 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->view('welcome_message');
 	}
-
+  
 	public function upload_image()
 	{
 		if(isset($_FILES['image']) && !empty($_FILES['image']['name']))

@@ -22,5 +22,6 @@ class Resize extends CI_Controller {
 	{
 	    $data['image']=$image;
 		$this->load->view('welcome_message',$data);
-	}
+    }
+    
 }
